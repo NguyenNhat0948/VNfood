@@ -398,197 +398,203 @@ const recipes = [
         }
     }
 ];
-
-const translations = {
-    vi: {
-        title: "Công thức nấu ăn của Nat",
-        subtitle: "Lưu trữ và chia sẻ những món ăn ngon mỗi ngày!",
-        searchPlaceholder: "Tìm kiếm công thức hoặc nguyên liệu...",
-        cats: {
-            all: "Tất cả",
-            main: "Món chính",
-            snack: "Ăn vặt",
-            dessert: "Bánh",
-            sauce: "Nước chấm"
-        },
-        ingredients: "Nguyên liệu",
-        instructions: "Cách làm"
-    },
-    en: {
-        title: "Nat's Recipes",
-        subtitle: "Storing and sharing delicious daily meals!",
-        searchPlaceholder: "Search recipes or ingredients...",
-        cats: {
-            all: "All",
-            main: "Main Dish",
-            snack: "Snacks",
-            dessert: "Dessert",
-            sauce: "Sauces"
-        },
-        ingredients: "Ingredients",
-        instructions: "Instructions"
-    },
-    ja: {
-        title: "ナットのレシピ",
-        subtitle: "毎日のおいしい料理を保存・共有！",
-        searchPlaceholder: "レシピや材料を検索...",
-        cats: {
-            all: "すべて",
-            main: "メイン",
-            snack: "おやつ",
-            dessert: "デザート",
-            sauce: "ソース"
-        },
-        ingredients: "材料",
-        instructions: "作り方"
-    }
-};
-
-let currentLang = 'vi';
-let activeCat = 'all';
-
-// DOM Elements
-const titleEl = document.getElementById('title');
-const subtitleEl = document.getElementById('subtitle');
-const searchInput = document.getElementById('searchInput');
-const catContainer = document.getElementById('categoryContainer');
-const gridEl = document.getElementById('recipeGrid');
-const langBtns = document.querySelectorAll('.lang-btn');
-
-// Modal Elements
-const modal = document.getElementById('recipeModal');
-const modalBody = document.getElementById('modalBody');
-const closeBtn = document.querySelector('.close-btn');
-
-function init() {
-    updateUI();
-    renderCategories();
-    renderRecipes();
-    setupEventListeners();
-    setupScrollAnimation();
+401: 
+402: const translations = {
+403:     vi: {
+404:         title: "Công thức nấu ăn của Nat",
+405:         subtitle: "Lưu trữ và chia sẻ những món ăn ngon mỗi ngày!",
+406:         searchPlaceholder: "Tìm kiếm công thức hoặc nguyên liệu...",
+407:         cats: {
+408:             all: "Tất cả",
+409:             main: "Món chính",
+410:             snack: "Ăn vặt",
+411:             dessert: "Bánh",
+412:             sauce: "Nước chấm"
+413:         },
+414:         ingredients: "Nguyên liệu",
+415:         instructions: "Cách làm"
+416:     },
+417:     en: {
+418:         title: "Nat's Recipes",
+419:         subtitle: "Storing and sharing delicious daily meals!",
+420:         searchPlaceholder: "Search recipes or ingredients...",
+421:         cats: {
+422:             all: "All",
+423:             main: "Main Dish",
+424:             snack: "Snacks",
+425:             dessert: "Dessert",
+426:             sauce: "Sauces"
+427:         },
+428:         ingredients: "Ingredients",
+429:         instructions: "Instructions"
+430:     },
+431:     ja: {
+432:         title: "ナットのレシピ",
+433:         subtitle: "毎日のおいしい料理を保存・共有！",
+434:         searchPlaceholder: "レシピや材料を検索...",
+435:         cats: {
+436:             all: "すべて",
+437:             main: "メイン",
+438:             snack: "おやつ",
+439:             dessert: "デザート",
+440:             sauce: "ソース"
+441:         },
+442:         ingredients: "材料",
+443:         instructions: "作り方"
+444:     }
+445: };
+446: 
+447: let currentLang = 'vi';
+448: let activeCat = 'all';
+449: 
+450: // DOM Elements
+451: const titleEl = document.getElementById('title');
+452: const subtitleEl = document.getElementById('subtitle');
+453: const searchInput = document.getElementById('searchInput');
+454: const catContainer = document.getElementById('categoryContainer');
+455: const gridEl = document.getElementById('recipeGrid');
+456: const langBtns = document.querySelectorAll('.lang-btn');
+457: 
+458: // Modal Elements
+459: const modal = document.getElementById('recipeModal');
+460: const modalBody = document.getElementById('modalBody');
+461: const closeBtn = document.querySelector('.close-btn');
+462: 
+463: function init() {
+464:     updateUI();
+465:     renderCategories();
+466:     renderRecipes();
+467:     setupEventListeners();
+468:     setupScrollAnimation();
+469: }
+470: 
+471: function updateUI() {
+472:     const t = translations[currentLang];
+473:     titleEl.textContent = t.title;
+474:     subtitleEl.textContent = t.subtitle;
+475:     searchInput.placeholder = t.searchPlaceholder;
+476: }
+477: 
+478: function renderCategories() {
+479:     const t = translations[currentLang].cats;
+480:     catContainer.innerHTML = '';
+481:     
+482:     for (const [key, value] of Object.entries(t)) {
+483:         const btn = document.createElement('button');
+484:         btn.className = `cat-btn ${activeCat === key ? 'active' : ''}`;
+485:         btn.dataset.cat = key;
+486:         btn.textContent = value;
+487:         btn.addEventListener('click', () => {
+488:             document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+489:             btn.classList.add('active');
+490:             activeCat = key;
+491:             renderRecipes();
+492:         });
+493:         catContainer.appendChild(btn);
+494:     }
+495: }
+496: 
+497: function renderRecipes() {
+498:     const query = searchInput.value.toLowerCase();
+499:     gridEl.innerHTML = '';
+500:     
+501:     let delay = 0;
+502: 
+503:     recipes.forEach(recipe => {
+504:         const data = recipe[currentLang];
+505:         
+506:         // Filter by category
+507:         if (activeCat !== 'all' && recipe.cat !== activeCat) return;
+508:         
+509:         // Filter by search
+510:         const matchTitle = data.title.toLowerCase().includes(query);
+511:         const matchIng = data.ingredients.some(ing => ing.toLowerCase().includes(query));
+512:         
+513:         if (!matchTitle && !matchIng) return;
+514: 
+515:         const card = document.createElement('div');
+516:         card.className = 'recipe-card animate-on-scroll visible';
+517:         card.style.animationDelay = `${delay}s`;
+518:         delay += 0.1;
+519: 
+520:         card.innerHTML = `
+521:             <div class="recipe-img">
+522:                 <div class="placeholder">Chưa có ảnh<br><small>(Tên file: recipe-${recipe.id}.jpg)</small></div>
+523:                 <img src="recipe-${recipe.id}.jpg" alt="${data.title}" onerror="this.style.display='none'">
+524:             </div>
+525:             <div class="recipe-content">
+526:                 <div class="recipe-cat">${data.catName}</div>
+527:                 <div class="recipe-title">${data.title}</div>
+528:             </div>
+529:         `;
+530: 
+531:         card.addEventListener('click', () => openModal(recipe));
+532:         gridEl.appendChild(card);
+533:     });
+534: }
+535: 
+536: function openModal(recipe) {
+537:     const data = recipe[currentLang];
+538:     const t = translations[currentLang];
+539:     
+540:     let ingHtml = '<ul>' + data.ingredients.map(i => `<li>${i}</li>`).join('') + '</ul>';
+541:     let instHtml = '<ol>' + data.instructions.map(i => `<li>${i}</li>`).join('') + '</ol>';
+542: 
+543:     modalBody.innerHTML = `
+544:         <div class="modal-header">
+545:             <h2 class="modal-title">${data.title}</h2>
+546:         </div>
+547:         <div class="modal-body">
+548:             <h3>${t.ingredients}</h3>
+549:             ${ingHtml}
+550:             <h3>${t.instructions}</h3>
+551:             ${instHtml}
+552:         </div>
+553:     `;
+554:     modal.style.display = 'block';
+555: }
+556: 
+557: function setupEventListeners() {
+558:     langBtns.forEach(btn => {
+559:         btn.addEventListener('click', (e) => {
+560:             langBtns.forEach(b => b.classList.remove('active'));
+561:             btn.classList.add('active');
+562:             currentLang = btn.dataset.lang;
+563:             updateUI();
+564:             renderCategories();
+565:             renderRecipes();
+566:         });
+567:     });
+568: 
+569:     searchInput.addEventListener('input', renderRecipes);
+570: 
+571:     closeBtn.addEventListener('click', () => {
+572:         modal.style.display = 'none';
+573:     });
+574: 
+575:     window.addEventListener('click', (e) => {
+576:         if (e.target === modal) {
+577:             modal.style.display = 'none';
+578:         }
+579:     });
+580: }
+581: 
+582: function setupScrollAnimation() {
+583:     const observer = new IntersectionObserver((entries) => {
+584:         entries.forEach(entry => {
+585:             if (entry.isIntersecting) {
+586:                 entry.target.classList.add('visible');
+587:             }
+588:         });
+589:     }, { threshold: 0.1 });
+590: 
+591:     document.querySelectorAll('.animate-on-scroll').forEach(el => {
+592:         observer.observe(el);
+593:     });
+594: }
+595: 
+596: // Start app
+597: init();
+598: 
+The above content shows the entire, complete file contents of the requested file.
 }
-
-function updateUI() {
-    const t = translations[currentLang];
-    titleEl.textContent = t.title;
-    subtitleEl.textContent = t.subtitle;
-    searchInput.placeholder = t.searchPlaceholder;
-}
-
-function renderCategories() {
-    const t = translations[currentLang].cats;
-    catContainer.innerHTML = '';
-    
-    for (const [key, value] of Object.entries(t)) {
-        const btn = document.createElement('button');
-        btn.className = `cat-btn ${activeCat === key ? 'active' : ''}`;
-        btn.dataset.cat = key;
-        btn.textContent = value;
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            activeCat = key;
-            renderRecipes();
-        });
-        catContainer.appendChild(btn);
-    }
-}
-
-function renderRecipes() {
-    const query = searchInput.value.toLowerCase();
-    gridEl.innerHTML = '';
-    
-    let delay = 0;
-
-    recipes.forEach(recipe => {
-        const data = recipe[currentLang];
-        
-        // Filter by category
-        if (activeCat !== 'all' && recipe.cat !== activeCat) return;
-        
-        // Filter by search
-        const matchTitle = data.title.toLowerCase().includes(query);
-        const matchIng = data.ingredients.some(ing => ing.toLowerCase().includes(query));
-        
-        if (!matchTitle && !matchIng) return;
-
-        const card = document.createElement('div');
-        card.className = 'recipe-card animate-on-scroll visible';
-        card.style.animationDelay = `${delay}s`;
-        delay += 0.1;
-
-        card.innerHTML = `
-            <div class="recipe-img" style="background-position: ${recipe.imgX} ${recipe.imgY};"></div>
-            <div class="recipe-content">
-                <div class="recipe-cat">${data.catName}</div>
-                <div class="recipe-title">${data.title}</div>
-            </div>
-        `;
-
-        card.addEventListener('click', () => openModal(recipe));
-        gridEl.appendChild(card);
-    });
-}
-
-function openModal(recipe) {
-    const data = recipe[currentLang];
-    const t = translations[currentLang];
-    
-    let ingHtml = '<ul>' + data.ingredients.map(i => `<li>${i}</li>`).join('') + '</ul>';
-    let instHtml = '<ol>' + data.instructions.map(i => `<li>${i}</li>`).join('') + '</ol>';
-
-    modalBody.innerHTML = `
-        <div class="modal-header">
-            <h2 class="modal-title">${data.title}</h2>
-        </div>
-        <div class="modal-body">
-            <h3>${t.ingredients}</h3>
-            ${ingHtml}
-            <h3>${t.instructions}</h3>
-            ${instHtml}
-        </div>
-    `;
-    modal.style.display = 'block';
-}
-
-function setupEventListeners() {
-    langBtns.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            langBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            currentLang = btn.dataset.lang;
-            updateUI();
-            renderCategories();
-            renderRecipes();
-        });
-    });
-
-    searchInput.addEventListener('input', renderRecipes);
-
-    closeBtn.addEventListener('click', () => {
-        modal.style.display = 'none';
-    });
-
-    window.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.style.display = 'none';
-        }
-    });
-}
-
-function setupScrollAnimation() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
-        });
-    }, { threshold: 0.1 });
-
-    document.querySelectorAll('.animate-on-scroll').forEach(el => {
-        observer.observe(el);
-    });
-}
-
-// Start app
-init();
