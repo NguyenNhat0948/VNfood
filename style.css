@@ -187,23 +187,33 @@ body {
     width: 100%;
     height: 220px;
     background-color: #f8f8f8;
-    background-image: url('recipes.jpg'); 
-    background-size: 500% 300%;
-    background-repeat: no-repeat;
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
 }
 
-.recipe-img::after {
-    content: 'Tải ảnh recipes.jpg vào thư mục này';
+.recipe-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 0;
+    left: 0;
+    transition: transform 0.5s ease;
+}
+
+.recipe-card:hover .recipe-img img {
+    transform: scale(1.05);
+}
+
+.recipe-img .placeholder {
     color: #999;
-    font-size: 12px;
+    font-size: 13px;
     text-align: center;
-    z-index: -1;
-    width: 80%;
+    padding: 20px;
+    line-height: 1.4;
 }
 
 .recipe-content {
